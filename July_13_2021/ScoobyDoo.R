@@ -58,6 +58,4 @@ character_season_comparison <- scoobydoo__grouped %>%
   scale_x_discrete(breaks = c("daphnie", "fred", "scooby", "shaggy", "velma"),
                    labels = c("Daphnie", "Fred", "Scooby", "Shaggy", "Velma"))
 
-scale_x_discrete(breaks=c("0.5","1","2"),
-                 labels=c("Dose 0.5", "Dose 1", "Dose 2"))
 
