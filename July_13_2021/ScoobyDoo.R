@@ -40,7 +40,7 @@ character_season_comparison <- scoobydoo__grouped %>%
   geom_col(position = "dodge") +
   theme_bw() +
   labs(
-    title = "Who Caught the Most Monsters each Season?",
+    title = "Which Scooby-Doo Character Caught the Most Monsters?",
     x = "Character Name",
     y = "Monsters Caught",
     fill = "Season",
@@ -54,6 +54,10 @@ character_season_comparison <- scoobydoo__grouped %>%
     plot.caption.position =  "plot",
     text = element_text(size = 10),
     plot.title = element_text(size = 15)
-  )
+  ) +
+  scale_x_discrete(breaks = c("daphnie", "fred", "scooby", "shaggy", "velma"),
+                   labels = c("Daphnie", "Fred", "Scooby", "Shaggy", "Velma"))
 
+scale_x_discrete(breaks=c("0.5","1","2"),
+                 labels=c("Dose 0.5", "Dose 1", "Dose 2"))
 
