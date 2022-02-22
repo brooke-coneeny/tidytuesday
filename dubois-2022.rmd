@@ -1,0 +1,176 @@
+---
+title: "Du Bois Challenge 2022"
+output: html_document
+---
+
+# Setup
+
+Welcome to the first data viz group meeting of 2022! Today we'll be participating in the Du Bois Challenge. (see [link](https://github.com/ajstarks/dubois-data-portraits/tree/master/challenge/2022) for more info)
+
+To launch rstudio, head to rstudio.swarthmore.edu (if you get an "unauthorized user" error, let me know and I can make an account for you!)
+
+To download this file:
+
+I have the document set up to automatically load data in and then run the `esquisse` graph builder (with the exception of the map challenge). Under each challenge, run the first chunk to see the original data visualization, and run the second chunk to launch the graph builder. 
+
+I am here to help! Let me know if you run into any issues. 
+
+Some tips for esquisse: 
+
+ - Changing the titles and axes labels makes a big difference! 
+ - See the "plot options" and "appearance" menus to change the colors
+ - Once you have something you like, make sure to click the "code" menu and copy and paste it into your .rmd file
+ - Esquisse is picky about bar graphs. If you're having trouble, try getting a line chart that you like, and then copying the code into the document, and then changing `geom_line()` to `geom_col()`. 
+
+```{r, message = FALSE}
+# Run This Chunk First
+
+library(tidyverse)
+library(sf)
+library(esquisse)
+library(maps)
+```
+
+# Challenge 2
+
+```{r}
+knitr::include_graphics("https://github.com/ajstarks/dubois-data-portraits/blob/master/challenge/2022/challenge02/original-plate-22.jpg?raw=true")
+```
+
+Run the code below to load the data and launch the esquisse ggplot2 builder:
+
+```{r, eval = F}
+challenge2 = read_csv("https://raw.githubusercontent.com/ajstarks/dubois-data-portraits/master/challenge/2022/challenge02/data.csv")
+
+esquisse::esquisser(challenge2)
+```
+
+
+# Challenge 3
+
+```{r}
+knitr::include_graphics("https://github.com/ajstarks/dubois-data-portraits/blob/master/challenge/2022/challenge03/original-plate-02.jpg?raw=true")
+```
+
+Run the code below to load the data and launch the esquisse ggplot2 builder:
+
+```{r}
+challenge3 = read_csv("https://raw.githubusercontent.com/ajstarks/dubois-data-portraits/master/challenge/2022/challenge03/data.csv")
+
+st_crosswalk <- tibble(state = tolower(state.name)) %>%
+   bind_cols(tibble(abb = state.abb)) %>% 
+   bind_rows(tibble(state = "District of Columbia", abb = "DC"))
+
+challenge3 = map_data("state") %>%
+  left_join(
+    left_join(challenge3, st_crosswalk, by = c("State" = "abb")),
+    by = c("region" = "state")) 
+```
+
+Remove the "#" and fill in the right variable to create the map, then choose a color palette and update aesthetics
+
+```{r}
+c3_map = ggplot(challenge3, aes(x = long, y = lat, group = State)) + 
+  geom_polygon(
+    col = "white", # aes(fill = <FILL IN VARIABLE HERE>)
+  )
+
+c3_map
+```
+
+
+# Challenge 4
+
+```{r}
+knitr::include_graphics("https://github.com/ajstarks/dubois-data-portraits/blob/master/challenge/2022/challenge04/original-plate-21.jpg?raw=true")
+```
+
+```{r, eval = F}
+challenge4 = read_csv("https://raw.githubusercontent.com/ajstarks/dubois-data-portraits/master/challenge/2022/challenge04/data.csv")
+esquisse::esquisser(challenge4)
+
+challenge4_plot <- challenge4 %>%
+  rename(property_valuation = "Property Valuation") %>%
+  mutate(in_data = case_when(
+    Year %in% c(1870,1900) ~ TRUE
+  ))
+  ggplot(aes(x = Year, y = property_valuation)) +
+  geom_line() +
+  labs(
+    title = "VALUATION OF TOWN AND CITY PROPERTY 
+    OWNED BY GEORGIA NEGROES",
+    x = "",
+    y = ""
+  ) + 
+  theme_light() +
+  theme(
+    plot.title = element_text(hjust = 0.5),
+    plot.background = element_rect(fill = "antiquewhite3"),
+    panel.background = element_rect(fill = "antiquewhite3"),
+    panel.grid.major = element_line(color = "salmon1"),
+    panel.grid.minor = element_line(color = "salmon1")
+  ) +
+  scale_x_continuous(breaks = c(1870, 1875, 1880, 1885, 1890, 1895, 1900),
+                     minor_breaks = seq(1870, 1900, 1)) + 
+  scale_y_continuous(breaks = c(100000, 2000000, 3000000, 4000000), labels = scales::comma, 
+                     minor_breaks = seq(0,5000000, 100000)) +
+  annotate("text", x = 1877, y = 2400000, label = "POLITICAL", color = "black", size = 4) +
+  annotate("text", x = 1878, y = 2300000, label = "UNREST", color = "black", size = 4) +
+  annotate("text", x = 1884, y = 4200000, label = "RISE OF", color = "black", size = 4) +
+  annotate("text", x = 1885, y = 4100000, label = "THE NEW", color = "black", size = 4) +
+  annotate("text", x = 1887, y = 4000000, label = "INDUSTRIALISM", color = "black", size = 4) +
+  annotate("text", x = 1896, y = 2500000, label = "DISFRANCHSMENT", color = "black", size = 3) +
+  annotate("text", x = 1896, y = 2300000, label = "AND", color = "black", size = 3) +
+  annotate("text", x = 1896, y = 2100000, label = "PROSCAPTIVE", color = "black", size = 3) +
+  annotate("text", x = 1896, y = 1900000, label = "LAWS", color = "black", size = 3)
+```
+
+# Challenge 5
+
+```{r}
+knitr::include_graphics("https://github.com/ajstarks/dubois-data-portraits/blob/master/challenge/2022/challenge05/original-plate-12.jpg?raw=true")
+```
+
+```{r, eval = F}
+challenge5 = read_csv("https://raw.githubusercontent.com/ajstarks/dubois-data-portraits/master/challenge/2022/challenge05/data.csv")
+
+esquisse::esquisser(challenge5)
+```
+
+
+# Challenge 7
+
+```{r}
+knitr::include_graphics("https://github.com/ajstarks/dubois-data-portraits/blob/master/challenge/2022/challenge07/original-plate-53.jpg?raw=true")
+```
+
+```{r, eval = F}
+challenge7 = read_csv("https://raw.githubusercontent.com/ajstarks/dubois-data-portraits/master/challenge/2022/challenge07/data.csv")
+
+esquisse::esquisser(challenge7)
+```
+
+
+# Challenge 8
+
+```{r}
+knitr::include_graphics("https://github.com/ajstarks/dubois-data-portraits/blob/master/challenge/2022/challenge08/original-plate-25.jpg?raw=true")
+```
+
+```{r, eval = F}
+challenge8 = read_csv("https://raw.githubusercontent.com/ajstarks/dubois-data-portraits/master/challenge/2022/challenge08/data.csv")
+
+esquisse::esquisser(challenge8)
+```
+
+# Challenge 10
+
+```{r}
+knitr::include_graphics("https://github.com/ajstarks/dubois-data-portraits/blob/master/challenge/2022/challenge10/original-plate-49.jpg?raw=true")
+```
+
+```{r, eval = F}
+challenge10 = read_csv("https://raw.githubusercontent.com/ajstarks/dubois-data-portraits/master/challenge/2022/challenge10/data.csv")
+
+esquisse::esquisser(challenge10)
+```
